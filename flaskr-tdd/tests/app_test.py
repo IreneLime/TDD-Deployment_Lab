@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from project.app import app
+from project.app import app, init_db
 
 
 def test_index():
@@ -12,4 +12,7 @@ def test_index():
 
 
 def test_database():
+    # Database creation
+    init_db()
+    # Check that the database exists
     assert Path("flaskr.db").is_file()
