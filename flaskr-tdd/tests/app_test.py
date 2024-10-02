@@ -4,6 +4,8 @@ from pathlib import Path
 
 from project.app import app, init_db
 
+import json
+
 TEST_DB = "test.db"
 
 
@@ -73,3 +75,12 @@ def test_messages(client):
     assert b"No entries here so far" not in rv.data
     assert b"&lt;Hello&gt;" in rv.data
     assert b"<strong>HTML</strong> allowed here" in rv.data
+
+
+def test_delete_message(client):
+    """Ensure the messages are being deleted"""
+    # Obtain delete action
+    rv = client.get("/delete/1")
+    # Check if the data is removed from the database
+    data = json.loads(rv.data)
+    assert data["status"] == 1
