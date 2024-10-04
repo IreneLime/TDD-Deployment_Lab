@@ -6,7 +6,7 @@ from project.app import app, db
 
 import json
 
-TEST_DB = "flaskr.db"
+TEST_DB = "test.db"
 
 
 @pytest.fixture
@@ -80,8 +80,10 @@ def test_messages(client):
 
 def test_delete_message(client):
     """Ensure the messages are being deleted"""
-    # Obtain delete action
     rv = client.get("/delete/1")
-    # Check if the data is removed from the database
+    data = json.loads(rv.data)
+    assert data["status"] == 0
+    login(client, app.config["USERNAME"], app.config["PASSWORD"])
+    rv = client.get("/delete/1")
     data = json.loads(rv.data)
     assert data["status"] == 1
