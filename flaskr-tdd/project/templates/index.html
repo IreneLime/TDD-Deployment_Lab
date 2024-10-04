@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Flaskr-TDD | Login</title>
+    <title>Flaskr</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -14,45 +14,67 @@
       <h1>Flaskr</h1>
       <br /><br />
 
+      {% if not session.logged_in %}
+      <a class="btn btn-success" role="button" href="{{ url_for('login') }}"
+        >log in</a
+      >
+      {% else %}
+      <a class="btn btn-warning" role="button" href="{{ url_for('logout') }}"
+        >log out</a
+      >
+      {% endif %}
+
+      <br /><br />
+
       {% for message in get_flashed_messages() %}
       <div class="flash alert alert-success col-sm-4" role="success">
         {{ message }}
       </div>
-      {% endfor %}
-
-      <h3>Login</h3>
-
-      {% if error %}
-      <p class="alert alert-danger col-sm-4" role="danger">
-        <strong>Error:</strong> {{ error }}
-      </p>
-      {% endif %}
-
-      <form action="{{ url_for('login') }}" method="post" class="form-group">
+      {% endfor %} {% if session.logged_in %}
+      <form
+        action="{{ url_for('add_entry') }}"
+        method="post"
+        class="add-entry form-group"
+      >
         <dl>
-          <dt>Username:</dt>
+          <dt>Title:</dt>
           <dd>
             <input
               type="text"
-              name="username"
+              size="30"
+              name="title"
               class="form-control col-sm-4"
             />
           </dd>
-          <dt>Password:</dt>
+          <dt>Text:</dt>
           <dd>
-            <input
-              type="password"
-              name="password"
+            <textarea
+              name="text"
+              rows="5"
+              cols="40"
               class="form-control col-sm-4"
-            />
+            ></textarea>
           </dd>
           <br /><br />
           <dd>
-            <input type="submit" class="btn btn-primary" value="Login" />
+            <input type="submit" class="btn btn-primary" value="Share" />
           </dd>
-          <span>Use "admin" for username and password</span>
         </dl>
       </form>
+      {% endif %}
+
+      <br />
+
+      <ul class="entries">
+        {% for entry in entries %}
+        <li class="entry">
+          <h2 id="{{ entry.id }}">{{ entry.title }}</h2>
+          {{ entry.text|safe }}
+        </li>
+        {% else %}
+        <li><em>No entries yet. Add some!</em></li>
+        {% endfor %}
+      </ul>
     </div>
     <script
       type="text/javascript"
